@@ -10,10 +10,9 @@ if [ $# -ne 1 ]; then
 fi
 
 next_version=$1
-current_git_tag="$(git tag -l "v*" | sort | tail -n 1)"
-current_version="$(echo "$current_git_tag" | cut -c 2-)"
+current_version="$(git tag -l "*.*.*" | sort | tail -n 1)"
 
-if [[ -z "$current_version" ]]; then
+if [[ -z "${current_version}" ]]; then
 	echo "Failed to get latest version. Aborting"
 	exit 2
 fi
