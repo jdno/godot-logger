@@ -4,7 +4,32 @@
 //! [Godot] game engine. It is built around the logging facade of the [`log`] crate, and uses the
 //! [`godot_print!`] macro from the [`gdnative`] bindings.
 //!
+//! # Use
+//!
+//! Add [`godot-logger`] and [`log`] as dependencies to `Cargo.toml`.
+//!
+//! Then initialize `godot-logger` in the `init` function that is exported by `gdnative`.
+//!
+//! ```no_run
+//! use gdnative::prelude::*;
+//! use log::Level;
+//!
+//! fn init(handle: InitHandle) {
+//!     godot_logger::init(Level::Debug);
+//!     log::debug!("Initialized the logger");
+//! }
+//!
+//! godot_init!(init);
+//! ```
+//!
+//! The following will appear in the _Output_ console inside Godot:
+//!
+//! ```text
+//! 2021-09-25 19:29:25 DEBUG Initialized the logger
+//! ```
+//!
 //! [`gdnative`]: https://crates.io/crates/gdnative
+//! [`godot-logger`]: https://crates.io/crates/godot-logger
 //! [`godot_print!`]: https://docs.rs/gdnative/latest/gdnative/macro.godot_print.html
 //! [`log`]: https://crates.io/crates/log
 //! [Godot]: https://godotengine.org/
