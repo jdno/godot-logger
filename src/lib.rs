@@ -10,7 +10,7 @@
 //! [Godot]: https://godotengine.org/
 
 use chrono::Local;
-use gdnative::{godot_print, godot_warn};
+use gdnative_core::{godot_print, godot_warn};
 use log::{Level, Log, Metadata, Record, SetLoggerError};
 
 static LOGGER: GodotLogger = GodotLogger;
