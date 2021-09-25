@@ -1,0 +1,21 @@
+[package]
+name = "godot-logger"
+version = "0.1.0"
+edition = "2018"
+
+description = "A logger for godot-rust projects that prints logs using the godot_print! macro"
+repository = "https://github.com/jdno/godot-logger"
+license = "MIT OR Apache-2.0"
+keywords = [
+    "gamedev",
+    "godot",
+    "log"
+]
+categories = [
+    "development-tools::debugging"
+]
+
+# See more keys and their definitions at
+# https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
