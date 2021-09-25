@@ -10,7 +10,7 @@
 //! [Godot]: https://godotengine.org/
 
 use chrono::Local;
-use gdnative::godot_print;
+use gdnative::{godot_print, godot_warn};
 use log::{Level, Log, Metadata, Record, SetLoggerError};
 
 static LOGGER: GodotLogger = GodotLogger;
@@ -31,12 +31,18 @@ impl Log for GodotLogger {
     }
 
     fn log(&self, record: &Record) {
-        godot_print!(
+        let message = format!(
             "{} {} {}",
             Local::now().format("%Y-%m-%d %H:%M:%S").to_string(),
             record.level(),
             record.args()
         );
+
+        if record.level() <= Level::Warn {
+            godot_warn!("{}", message);
+        } else {
+            godot_print!("{}", message);
+        }
     }
 
     fn flush(&self) {}
