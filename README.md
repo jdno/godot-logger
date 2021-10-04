@@ -14,6 +14,7 @@ Then initialize `godot-logger` in the `init` function that is exported by
 
 ```rust
 use gdnative::prelude::*;
+use log::Level;
 
 fn init(handle: InitHandle) {
     godot_logger::init(Level::Debug);
