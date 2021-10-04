@@ -56,17 +56,19 @@ impl Log for GodotLogger {
     }
 
     fn log(&self, record: &Record) {
-        let message = format!(
-            "{} {} {}",
-            Local::now().format("%Y-%m-%d %H:%M:%S").to_string(),
-            record.level(),
-            record.args()
-        );
+        let timestamp = Local::now().format("%Y-%m-%d %H:%M:%S").to_string();
+        let level = record.level();
+        let message = record.args();
+
+        let output = match record.module_path() {
+            Some(module) => format!("{} {} {} {}", timestamp, level, module, message),
+            None => format!("{} {} {}", timestamp, level, message),
+        };
 
         if record.level() <= Level::Warn {
-            godot_warn!("{}", message);
+            godot_warn!("{}", output);
         } else {
-            godot_print!("{}", message);
+            godot_print!("{}", output);
         }
     }
 
