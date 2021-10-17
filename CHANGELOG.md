@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- `init` now accepts a list of module-level overrides
+
 ## [0.2.0]
 
 ### Added
