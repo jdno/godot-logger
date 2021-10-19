@@ -15,15 +15,16 @@
 //! Then initialize [godot-logger] in the `init` function that is exported by `gdnative`. Pass in a
 //! default log level, and a list with module-level overrides (can be empty).
 //!
-//! ```no_run
+//! ```
 //! use gdnative::prelude::*;
-//! use godot_logger::Filter;
-//! use log::Level;
+//! use godot_logger::{Filter, GodotLogger};
+//! use log::{Level, LevelFilter};
 //!
 //! fn init(handle: InitHandle) {
-//!     let filters = vec![Filter::new("h2", Level::Error)];
-//!
-//!     godot_logger::init(Level::Debug, filters);
+//!     GodotLogger::builder()
+//!         .default_log_level(Level::Debug)
+//!         .add_filter(Filter::new("godot_logger", LevelFilter::Off))
+//!         .init();
 //!     log::debug!("Initialized the logger");
 //! }
 //!
@@ -44,123 +45,38 @@
 //! [log4rs]: https://crates.io/crates/log4rs
 //! [Godot]: https://godotengine.org/
 
-use chrono::Local;
-use gdnative_core::{godot_print, godot_warn};
-use log::{Level, LevelFilter, Record, SetLoggerError};
-use log4rs::append::Append;
-use log4rs::config::{Appender, Logger, Root};
-use log4rs::Config;
+pub use crate::builder::*;
+pub use crate::filter::*;
 
-const APPENDER_NAME: &str = "godot-logger";
+mod appender;
+mod builder;
+mod filter;
 
-/// Initialize the logger
+/// A logger that prints to the output console of the Godot game engine
 ///
-/// The logger is initialized with a default log level and a list of module-level overrides. The
-/// overrides follow the convention of popular logging frameworks such as [env_logger] and [log4rs],
-/// and combine a module path with a log level.
+/// `GodotLogger` is a logger implementation that prints log records to the output console inside
+/// the Godot game engine. The log level can be set per Rust module, similar to other logging
+/// frameworks in Rust.
 ///
-/// # Example
+/// The recommended way to initialize the logger is by using the crate's [`Builder`]. Its setters
+/// can be used to configure the logger and overwrite the default configuration.
+///
+/// # Examples
 ///
 /// ```
-/// use gdnative::prelude::*;
-/// use godot_logger::Filter;
+/// use godot_logger::GodotLogger;
 /// use log::Level;
 ///
-/// fn init(handle: InitHandle) {
-///     let filters = vec![Filter::new("h2", Level::Error)];
-///
-///     godot_logger::init(Level::Debug, filters);
-///     log::debug!("Initialized the logger");
-/// }
-///
-/// godot_init!(init);
+/// // Configure and initialize the logger
+/// GodotLogger::builder()
+///     .default_log_level(Level::Debug)
+///     .init();
 /// ```
-pub fn init(default_level: Level, filters: Vec<Filter>) -> Result<(), SetLoggerError> {
-    let loggers: Vec<Logger> = filters
-        .iter()
-        .map(|filter| {
-            Logger::builder()
-                .appender(APPENDER_NAME)
-                .build(filter.module, filter.level)
-        })
-        .collect();
-
-    let config = Config::builder()
-        .appender(Appender::builder().build(APPENDER_NAME, Box::new(GodotAppender)))
-        .loggers(loggers)
-        .build(
-            Root::builder()
-                .appender(APPENDER_NAME)
-                .build(default_level.to_level_filter()),
-        )
-        .unwrap();
-
-    let _handle = log4rs::init_config(config)?;
-    Ok(())
-}
-
-/// A filter to apply a custom log level to a Rust module
-///
-/// Logs in [godot-logger] can be filtered using the default log level or a module-level override.
-/// Module-level overrides are configured using a `Filter`, which combines a module path in Rust
-/// with a log level.
-///
-/// # Example
-///
-/// ```
-/// use godot_logger::Filter;
-/// use log::Level;
-///
-/// let filter = Filter::new("godot-logger", Level::Error);
-/// ```
-pub struct Filter {
-    module: &'static str,
-    level: LevelFilter,
-}
-
-impl Filter {
-    /// Initialize a new filter
-    ///
-    /// Filters combine a module path in Rust with a log level.
-    ///
-    /// # Example
-    ///
-    /// ```
-    /// use godot_logger::Filter;
-    /// use log::Level;
-    ///
-    /// let filter = Filter::new("godot-logger", Level::Error);
-    /// ```
-    pub fn new(module: &'static str, level: Level) -> Self {
-        Self {
-            module,
-            level: level.to_level_filter(),
-        }
-    }
-}
-
 #[derive(Copy, Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
-struct GodotAppender;
+pub struct GodotLogger;
 
-impl Append for GodotAppender {
-    fn append(&self, record: &Record) -> anyhow::Result<()> {
-        let timestamp = Local::now().format("%Y-%m-%d %H:%M:%S").to_string();
-        let level = record.level();
-        let message = record.args();
-
-        let output = match record.module_path() {
-            Some(module) => format!("{} {} {} {}", timestamp, level, module, message),
-            None => format!("{} {} {}", timestamp, level, message),
-        };
-
-        if record.level() <= Level::Warn {
-            godot_warn!("{}", output);
-        } else {
-            godot_print!("{}", output);
-        }
-
-        Ok(())
+impl GodotLogger {
+    pub fn builder() -> Builder {
+        Builder::default()
     }
-
-    fn flush(&self) {}
 }
