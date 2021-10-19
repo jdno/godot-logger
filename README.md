@@ -7,17 +7,29 @@ logs using [`godot_print!`].
 
 ## Usage
 
-Add [`godot-logger`] and [`log`] as dependencies to `Cargo.toml`.
+Start by adding [`godot-logger`] and [`log`] as dependencies to your project's
+`Cargo.toml`.
 
-Then initialize `godot-logger` in the `init` function that is exported by
-`gdnative`
+```toml
+[dependencies]
+godot-logger = "0.2.0"
+log = "0.4"
+```
+
+Then configure and initialize the logger in the `init` method that is passed to
+`godot_init!`.
 
 ```rust
 use gdnative::prelude::*;
-use log::Level;
+use godot_logger::{Filter, GodotLogger};
+use log::{Level, LevelFilter};
 
 fn init(handle: InitHandle) {
-    godot_logger::init(Level::Debug);
+    GodotLogger::builder()
+        .default_log_level(Level::Warn)
+        .add_filter(Filter::new("godot_logger", LevelFilter::Debug))
+        .init();
+
     log::debug!("Initialized the logger");
 }
 
@@ -27,7 +39,7 @@ godot_init!(init);
 The following will be printed in the _Output_ console inside Godot:
 
 ```text
-2021-09-25 19:29:25 DEBUG Initialized the logger
+2021-09-25 19:29:25 DEBUG godot-logger Initialized the logger
 ```
 
 ## License
