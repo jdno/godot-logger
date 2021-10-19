@@ -12,7 +12,7 @@ Start by adding [`godot-logger`] and [`log`] as dependencies to your project's
 
 ```toml
 [dependencies]
-godot-logger = "0.2.0"
+godot-logger = "0.3.0"
 log = "0.4"
 ```
 
