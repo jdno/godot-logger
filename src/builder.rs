@@ -1,9 +1,9 @@
-use log::{Level, SetLoggerError};
+use log::{Level, LevelFilter, SetLoggerError};
 use log4rs::config::{Appender, Logger, Root};
 use log4rs::Config;
 
 use crate::appender::GodotAppender;
-use crate::Filter;
+use crate::filter::Filter;
 
 const APPENDER_NAME: &str = "godot-logger";
 
@@ -59,16 +59,13 @@ impl Builder {
     /// # Examples
     ///
     /// ```
-    /// use godot_logger::{Filter, GodotLogger};
+    /// use godot_logger::GodotLogger;
     /// use log::LevelFilter;
     ///
-    /// let mut builder = GodotLogger::builder();
-    /// let filter = Filter::new("godot_logger", LevelFilter::Off);
-    ///
-    /// builder = builder.add_filter(filter);
+    /// GodotLogger::builder().add_filter("godot_logger", LevelFilter::Off);
     /// ```
-    pub fn add_filter(mut self, filter: Filter) -> Self {
-        self.filters.push(filter);
+    pub fn add_filter(mut self, module: &'static str, level: LevelFilter) -> Self {
+        self.filters.push(Filter::new(module, level));
         self
     }
 
@@ -125,8 +122,6 @@ impl Default for Builder {
 mod tests {
     use log::{Level, LevelFilter};
 
-    use crate::Filter;
-
     use super::Builder;
 
     #[test]
@@ -142,7 +137,7 @@ mod tests {
     fn add_filter() {
         let mut builder = Builder::default();
 
-        builder = builder.add_filter(Filter::new("godot_logger::builder", LevelFilter::Off));
+        builder = builder.add_filter("godot_logger::builder", LevelFilter::Off);
 
         assert_eq!(builder.filters.len(), 1);
     }

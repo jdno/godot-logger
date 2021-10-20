@@ -17,13 +17,13 @@
 //!
 //! ```
 //! use gdnative::prelude::*;
-//! use godot_logger::{Filter, GodotLogger};
+//! use godot_logger::GodotLogger;
 //! use log::{Level, LevelFilter};
 //!
 //! fn init(handle: InitHandle) {
 //!     GodotLogger::builder()
-//!         .default_log_level(Level::Debug)
-//!         .add_filter(Filter::new("godot_logger", LevelFilter::Off))
+//!         .default_log_level(Level::Info)
+//!         .add_filter("godot_logger", LevelFilter::Debug)
 //!         .init();
 //!     log::debug!("Initialized the logger");
 //! }
@@ -34,7 +34,7 @@
 //! The following will appear in the _Output_ console inside Godot:
 //!
 //! ```text
-//! 2021-09-25 19:29:25 DEBUG godot-logger Initialized the logger
+//! 2021-09-25 19:29:25 DEBUG godot_logger Initialized the logger
 //! ```
 //!
 //! [env_logger]: https://crates.io/crates/env_logger
@@ -46,7 +46,6 @@
 //! [Godot]: https://godotengine.org/
 
 pub use crate::builder::*;
-pub use crate::filter::*;
 
 mod appender;
 mod builder;
@@ -65,11 +64,12 @@ mod filter;
 ///
 /// ```
 /// use godot_logger::GodotLogger;
-/// use log::Level;
+/// use log::{Level, LevelFilter};
 ///
 /// // Configure and initialize the logger
 /// GodotLogger::builder()
 ///     .default_log_level(Level::Debug)
+///     .add_filter("godot-logger", LevelFilter::Warn)
 ///     .init();
 /// ```
 #[derive(Copy, Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]

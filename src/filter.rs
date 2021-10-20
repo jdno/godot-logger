@@ -6,18 +6,9 @@ use log::LevelFilter;
 /// Module-level overrides are configured using a `Filter`, which combines a module path in Rust
 /// with a log level.
 ///
-/// # Example
-///
-/// ```
-/// use godot_logger::Filter;
-/// use log::LevelFilter;
-///
-/// let filter = Filter::new("godot-logger", LevelFilter::Off);
-/// ```
-///
 /// [godot-logger]: https://crates.io/crates/godot-logger
 #[derive(Copy, Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug)]
-pub struct Filter {
+pub(crate) struct Filter {
     module: &'static str,
     level: LevelFilter,
 }
@@ -27,15 +18,6 @@ impl Filter {
     ///
     /// Filters combine a module path in Rust with a log level, and are used to set a log level for
     /// a specific module.
-    ///
-    /// # Example
-    ///
-    /// ```
-    /// use godot_logger::Filter;
-    /// use log::LevelFilter;
-    ///
-    /// let filter = Filter::new("godot-logger", LevelFilter::Off);
-    /// ```
     pub fn new(module: &'static str, level: LevelFilter) -> Self {
         Self { module, level }
     }
