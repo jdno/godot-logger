@@ -19,11 +19,11 @@ categories = [
 # https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-anyhow = "1.0.44"
-chrono = "0.4.19"
-gdnative-core = "0.9.3"
-log = "0.4.14"
-log4rs = "1.0.0"
+anyhow = "1"
+chrono = "0.4"
+gdnative-core = "0.9"
+log = "0.4"
+log4rs = "1"
 
 [dev-dependencies]
-gdnative = "0.9.3"
+gdnative = "0.9"
