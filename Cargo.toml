@@ -26,4 +26,4 @@ log = "0.4"
 log4rs = "1"
 
 [dev-dependencies]
-gdnative = "0.9"
+gdnative = "0.10"
