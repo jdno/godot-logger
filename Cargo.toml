@@ -21,7 +21,7 @@ categories = [
 [dependencies]
 anyhow = "1"
 chrono = "0.4"
-gdnative-core = "0.9"
+gdnative-core = "0.10"
 log = "0.4"
 log4rs = "1"
 
