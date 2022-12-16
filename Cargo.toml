@@ -20,10 +20,10 @@ categories = [
 
 [dependencies]
 anyhow = "1"
-chrono = "0.4"
-gdnative-core = "0.9"
-log = "0.4"
+chrono = ">= 0.4"
+gdnative-core = ">= 0.9"
+log = ">= 0.4"
 log4rs = "1"
 
 [dev-dependencies]
-gdnative = "0.9"
+gdnative = ">= 0.9"
