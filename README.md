@@ -65,6 +65,5 @@ for inclusion in the work by you, as defined in the Apache-2.0 license, shall be
 dual licensed as above, without any additional terms or conditions.
 
 [`godot-logger`]: https://crates.io/crates/godot-logger
-[`godot_print!`]: https://docs.rs/gdnative/latest/gdnative/macro.godot_print.html
 [godot-rust]: https://godot-rust.github.io
 [`log`]: https://crates.io/crates/log
