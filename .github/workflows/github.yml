@@ -1,5 +1,5 @@
 ---
-name: Repository
+name: GitHub
 
 "on":
   push:
@@ -8,7 +8,7 @@ name: Repository
 
 jobs:
   labels:
-    name: Labels
+    name: Sync labels
     runs-on: ubuntu-latest
 
     steps:
@@ -16,7 +16,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Sync labels
-        uses: micnncim/action-label-syncer@v1
+        uses: micnncim/action-label-syncer@v1.3.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
