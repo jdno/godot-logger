@@ -45,8 +45,11 @@
 //! [log4rs]: https://crates.io/crates/log4rs
 //! [Godot]: https://godotengine.org/
 
-#[cfg(not(feature = "godot3"))]
-compile_error!("You need to enable godot3 feature");
+#[cfg(all(not(feature = "godot3"), not(feature = "godot4")))]
+compile_error!("You need to enable godot3 or godot4 feature");
+
+#[cfg(all(feature = "godot3", feature = "godot4"))]
+compile_error!("You need to enable godot3 or godot4 feature");
 
 pub use crate::builder::*;
 

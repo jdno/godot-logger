@@ -28,9 +28,15 @@ log4rs = "1"
 version = ">= 0.9"
 optional = true
 
+[dependencies.godot]
+git = "https://github.com/godot-rust/gdext"
+branch = "master"
+optional = true
+
 [dev-dependencies]
 gdnative = ">= 0.9"
 
 [features]
 default = ["godot3"]
 godot3 = ["gdnative-core"]
+godot4 = ["godot"]
