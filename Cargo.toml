@@ -21,9 +21,16 @@ categories = [
 [dependencies]
 anyhow = "1"
 chrono = ">= 0.4"
-gdnative-core = ">= 0.9"
 log = ">= 0.4"
 log4rs = "1"
 
+[dependencies.gdnative-core]
+version = ">= 0.9"
+optional = true
+
 [dev-dependencies]
 gdnative = ">= 0.9"
+
+[features]
+default = ["godot3"]
+godot3 = ["gdnative-core"]

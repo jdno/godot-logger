@@ -45,6 +45,9 @@
 //! [log4rs]: https://crates.io/crates/log4rs
 //! [Godot]: https://godotengine.org/
 
+#[cfg(not(feature = "godot3"))]
+compile_error!("You need to enable godot3 feature");
+
 pub use crate::builder::*;
 
 mod appender;
