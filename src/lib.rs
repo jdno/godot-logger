@@ -2,7 +2,7 @@
 //!
 //! [godot-logger] is a simple logger that prints log messages to the output console inside the
 //! [Godot] game engine. It is built around the logging facade of the [log] crate, and uses the
-//! [`godot_print!`] macro from the [gdnative] bindings.
+//! [`godot_print!`] macro from the [gdnative] or [gdext] bindings.
 //!
 //! It is possible to configure different log levels for different Rust modules, similar to other
 //! popular logging frameworks such as [env_logger] or [log4rs]. Simply provide a list as the second
@@ -11,6 +11,10 @@
 //! # Use
 //!
 //! Add [godot-logger] and [log] as dependencies to `Cargo.toml`.
+//!
+//! Enable the feature `godot3` or `godot4` according to your godot version.
+//!
+//! ## godot3
 //!
 //! Then initialize [godot-logger] in the `init` function that is exported by `gdnative`. Pass in a
 //! default log level, and a list with module-level overrides (can be empty).
@@ -31,6 +35,29 @@
 //! godot_init!(init);
 //! ```
 //!
+//! ## godot4
+//!
+//! ```ignore
+//! use godot::prelude::*;
+//! use godot_logger::GodotLogger;
+//! use log::{Level, LevelFilter};
+//!
+//! struct MyExtension;
+//!
+//! #[gdextension]
+//! unsafe impl ExtensionLibrary for MyExtension {
+//!     fn on_level_init(level: InitLevel) {
+//!         if level == InitLevel::Core {
+//!             GodotLogger::builder()
+//!                 .default_log_level(Level::Info)
+//!                 .add_filter("godot_logger", LevelFilter::Debug)
+//!                 .init();
+//!             log::debug!("Initialized the logger");
+//!         }
+//!     }
+//! }
+//! ```
+//!
 //! The following will appear in the _Output_ console inside Godot:
 //!
 //! ```text
@@ -39,11 +66,18 @@
 //!
 //! [env_logger]: https://crates.io/crates/env_logger
 //! [gdnative]: https://crates.io/crates/gdnative
+//! [gdext]: https://github.com/godot-rust/gdext
 //! [godot-logger]: https://crates.io/crates/godot-logger
 //! [`godot_print!`]: https://docs.rs/gdnative/latest/gdnative/macro.godot_print.html
 //! [log]: https://crates.io/crates/log
 //! [log4rs]: https://crates.io/crates/log4rs
 //! [Godot]: https://godotengine.org/
+
+#[cfg(all(not(feature = "godot3"), not(feature = "godot4")))]
+compile_error!("You need to enable godot3 or godot4 feature");
+
+#[cfg(all(feature = "godot3", feature = "godot4"))]
+compile_error!("You need to enable godot3 or godot4 feature");
 
 pub use crate::builder::*;
 
