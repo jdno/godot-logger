@@ -59,7 +59,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: prettier
-        uses: creyD/prettier_action@v4.3
+        uses: creyD/prettier_action@v4.5
         with:
           dry: true
           prettier_options: "--check **/*.{yml,yaml}"
